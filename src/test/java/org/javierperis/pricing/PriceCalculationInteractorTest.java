@@ -16,7 +16,6 @@ public class PriceCalculationInteractorTest {
     private static final Long PRODUCT_ID = 35455L;
     private static final Currency EURO_CURRENCY = Currency.getInstance("EUR");
 
-    @Disabled("To be met")
     @Test
     public void givenSomePrices_whenRequestOneInRange_ThenReturnThatPrice() {
         PriceCalculationInteractor priceCalculationInteractor = new PriceCalculationInteractor();
@@ -29,7 +28,7 @@ public class PriceCalculationInteractorTest {
         final int expectedPriceList = 1;
         final double expectedPrice = 35.50D;
         PriceRequestModel priceRequestModel = new PriceRequestModel(1L, 35455L, localDateTime);
-        
+
         PriceResponseModel priceResponseModel = priceCalculationInteractor.getPrice(priceRequestModel);
 
         assertThat(priceResponseModel.getProductId()).isEqualTo(PRODUCT_ID);
