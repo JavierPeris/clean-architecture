@@ -1,5 +1,6 @@
 package org.javierperis.pricing;
 
+import java.util.Comparator;
 import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,8 @@ public class PriceCalculationInteractor {
                 priceRequestModel.getProductId(), priceRequestModel.getDate());
         List<PriceDsResponseModel> priceDsResponseModel = priceCalculationDsGateway.getPrices(priceDsRequestModel);
 
-        final Optional<PriceDsResponseModel> optionalPrice = priceDsResponseModel.stream().sorted().findFirst();
+        final Optional<PriceDsResponseModel> optionalPrice = priceDsResponseModel.stream()
+                .sorted(Comparator.reverseOrder()).findFirst();
         if (optionalPrice.isPresent()) {
             final PriceDsResponseModel price = optionalPrice.get();
             return new PriceResponseModel(price.getProductId(), price.getBrandId(), price.getPriceList(),
