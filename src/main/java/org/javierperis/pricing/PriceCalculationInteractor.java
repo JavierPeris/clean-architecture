@@ -1,22 +1,29 @@
 package org.javierperis.pricing;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Currency;
+import java.util.List;
+import java.util.Optional;
 
 public class PriceCalculationInteractor {
 
+    final PriceCalculationDsGateway priceCalculationDsGateway;
+
+    public PriceCalculationInteractor(PriceCalculationDsGateway priceCalculationDsGateway) {
+        this.priceCalculationDsGateway = priceCalculationDsGateway;
+    }
 
     public PriceResponseModel getPrice(PriceRequestModel priceRequestModel) {
-        final LocalDateTime expectedStartDateForApplicablePrice = LocalDate.of(2020, 6, 14)
-                .atTime(0, 0);
-        final LocalDateTime expectedEndDateForApplicablePrice = LocalDate.of(2020, 12, 31)
-                .atTime(23, 59);
-        final Long expectedPriceList = 1L;
-        final double expectedPrice = 35.50D;
+        PriceDsRequestModel priceDsRequestModel = new PriceDsRequestModel(priceRequestModel.getBrandId(),
+                priceRequestModel.getProductId(), priceRequestModel.getDate());
+        List<PriceDsResponseModel> priceDsResponseModel = priceCalculationDsGateway.getPrices(priceDsRequestModel);
 
-        return new PriceResponseModel(35455L, 1L, expectedPriceList,
-                expectedStartDateForApplicablePrice, expectedEndDateForApplicablePrice, expectedPrice,
-                Currency.getInstance("EUR"));
+        final Optional<PriceDsResponseModel> optionalPrice = priceDsResponseModel.stream().sorted().findFirst();
+        if (optionalPrice.isPresent()) {
+            final PriceDsResponseModel price = optionalPrice.get();
+            return new PriceResponseModel(price.getProductId(), price.getBrandId(), price.getPriceList(),
+                    price.getStartDate(), price.getEndDate(), price.getPrice(),
+                    Currency.getInstance(price.getCurrency()));
+        }
+        return null;
     }
 }
