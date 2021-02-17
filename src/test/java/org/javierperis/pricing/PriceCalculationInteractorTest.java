@@ -19,10 +19,23 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class PriceCalculationInteractorTest {
 
-
     private static final Long ZARA_BRAND_ID = 1L;
     private static final Long PRODUCT_ID = 35455L;
     private static final Currency EURO_CURRENCY = Currency.getInstance("EUR");
+
+    private static final LocalDateTime firstStartDate = LocalDate.of(2020, 6, 14)
+            .atTime(0, 0);
+    private static final LocalDateTime firstEndDate = LocalDate.of(2020, 12, 31)
+            .atTime(23, 59);
+    private static final Long FIRST_PRICE_LIST = 1L;
+    private static final Double FIRST_PRICE = 35.50D;
+
+    private static final LocalDateTime secondStartDate = LocalDate.of(2020, 6, 14)
+            .atTime(15, 0);
+    private static final LocalDateTime secondEndDate = LocalDate.of(2020, 6, 14)
+            .atTime(18, 30);
+    private static final Long SECOND_PRICE_LIST = 2L;
+    private static final Double SECOND_PRICE = 25.45D;
 
     @Mock
     private PriceCalculationDsGateway priceCalculationDsGateway;
@@ -36,29 +49,21 @@ public class PriceCalculationInteractorTest {
     }
 
     @Test
-    public void givenJustOnePriceInRage_whenRequest_ThenReturnThatPrice() {
+    public void givenJustOnePriceInRange_whenRequest_ThenReturnThatPrice() {
         final LocalDateTime localDateTime = LocalDate.of(2020, 6, 16).atTime(21, 0);
         final PriceRequestModel priceRequestModel = new PriceRequestModel(1L, 35455L, localDateTime);
-
-        final LocalDateTime expectedStartDateForApplicablePrice = LocalDate.of(2020, 6, 14)
-                .atTime(0, 0);
-        final LocalDateTime expectedEndDateForApplicablePrice = LocalDate.of(2020, 12, 31)
-                .atTime(23, 59);
-        final long expectedPriceList = 1;
-        final double expectedPrice = 35.50D;
-
-        final List<PriceDsResponseModel> prices = List.of(createPrice(expectedPriceList,
-                expectedStartDateForApplicablePrice, expectedEndDateForApplicablePrice, 0L, expectedPrice));
+        final List<PriceDsResponseModel> prices = List.of(createPrice(FIRST_PRICE_LIST,
+                firstStartDate, firstEndDate, 0L, FIRST_PRICE));
         when(priceCalculationDsGateway.getPrices(any())).thenReturn(prices);
 
         PriceResponseModel priceResponseModel = priceCalculationInteractor.getPrice(priceRequestModel);
 
         assertThat(priceResponseModel.getProductId()).isEqualTo(PRODUCT_ID);
         assertThat(priceResponseModel.getBrandId()).isEqualTo(ZARA_BRAND_ID);
-        assertThat(priceResponseModel.getPriceList()).isEqualTo(expectedPriceList);
-        assertThat(priceResponseModel.getStartDate()).isEqualTo(expectedStartDateForApplicablePrice);
-        assertThat(priceResponseModel.getEndDate()).isEqualTo(expectedEndDateForApplicablePrice);
-        assertThat(priceResponseModel.getPrice()).isEqualTo(expectedPrice);
+        assertThat(priceResponseModel.getPriceList()).isEqualTo(FIRST_PRICE_LIST);
+        assertThat(priceResponseModel.getStartDate()).isEqualTo(firstStartDate);
+        assertThat(priceResponseModel.getEndDate()).isEqualTo(firstEndDate);
+        assertThat(priceResponseModel.getPrice()).isEqualTo(FIRST_PRICE);
         assertThat(priceResponseModel.getCurrency()).isEqualTo(EURO_CURRENCY);
     }
 
@@ -70,37 +75,22 @@ public class PriceCalculationInteractorTest {
     }
 
     @Test
-    public void givenSomePricesInRage_whenRequest_ThenReturnPriceWithHigherPriority() {
+    public void givenSomePricesInRange_whenRequest_ThenReturnPriceWithHigherPriority() {
         final LocalDateTime localDateTime = LocalDate.of(2020, 6, 14).atTime(16, 0);
         final PriceRequestModel priceRequestModel = new PriceRequestModel(1L, 35455L, localDateTime);
-
-        final LocalDateTime startDateForApplicablePrice = LocalDate.of(2020, 6, 14)
-                .atTime(0, 0);
-        final LocalDateTime endDateForApplicablePrice = LocalDate.of(2020, 12, 31)
-                .atTime(23, 59);
-
-        final LocalDateTime expectedStartDateForApplicablePrice = LocalDate.of(2020, 6, 14)
-                .atTime(15, 0);
-        final LocalDateTime expectedEndDateForApplicablePrice = LocalDate.of(2020, 6, 14)
-                .atTime(18, 30);
-        final long expectedPriceList = 2L;
-        final double expectedPrice = 25.45D;
-
         final List<PriceDsResponseModel> prices = List.of(
-                createPrice(1L, startDateForApplicablePrice, endDateForApplicablePrice, 0L,
-                        35.50D),
-                createPrice(expectedPriceList, expectedStartDateForApplicablePrice, expectedEndDateForApplicablePrice,
-                        1L, expectedPrice));
+                createPrice(FIRST_PRICE_LIST, firstStartDate, firstEndDate, 0L, FIRST_PRICE),
+                createPrice(SECOND_PRICE_LIST, secondStartDate, secondEndDate, 1L, SECOND_PRICE));
         when(priceCalculationDsGateway.getPrices(any())).thenReturn(prices);
 
         PriceResponseModel priceResponseModel = priceCalculationInteractor.getPrice(priceRequestModel);
 
         assertThat(priceResponseModel.getProductId()).isEqualTo(PRODUCT_ID);
         assertThat(priceResponseModel.getBrandId()).isEqualTo(ZARA_BRAND_ID);
-        assertThat(priceResponseModel.getPriceList()).isEqualTo(expectedPriceList);
-        assertThat(priceResponseModel.getStartDate()).isEqualTo(expectedStartDateForApplicablePrice);
-        assertThat(priceResponseModel.getEndDate()).isEqualTo(expectedEndDateForApplicablePrice);
-        assertThat(priceResponseModel.getPrice()).isEqualTo(expectedPrice);
+        assertThat(priceResponseModel.getPriceList()).isEqualTo(SECOND_PRICE_LIST);
+        assertThat(priceResponseModel.getStartDate()).isEqualTo(secondStartDate);
+        assertThat(priceResponseModel.getEndDate()).isEqualTo(secondEndDate);
+        assertThat(priceResponseModel.getPrice()).isEqualTo(SECOND_PRICE);
         assertThat(priceResponseModel.getCurrency()).isEqualTo(EURO_CURRENCY);
     }
 
