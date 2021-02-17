@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,25 +13,20 @@ import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PriceCalculationInteractorTest {
 
     private static final Long ZARA_BRAND_ID = 1L;
     private static final Long PRODUCT_ID = 35455L;
-    private static final Currency EURO_CURRENCY = Currency.getInstance("EUR");
-
     private static final LocalDateTime firstStartDate = LocalDate.of(2020, 6, 14)
             .atTime(0, 0);
     private static final LocalDateTime firstEndDate = LocalDate.of(2020, 12, 31)
             .atTime(23, 59);
     private static final Long FIRST_PRICE_LIST = 1L;
     private static final Double FIRST_PRICE = 35.50D;
-
     private static final LocalDateTime secondStartDate = LocalDate.of(2020, 6, 14)
             .atTime(15, 0);
     private static final LocalDateTime secondEndDate = LocalDate.of(2020, 6, 14)
@@ -42,13 +36,15 @@ public class PriceCalculationInteractorTest {
 
     @Mock
     private PriceCalculationDsGateway priceCalculationDsGateway;
+    @Mock
+    private PricePresenter pricePresenter;
 
     @InjectMocks
     PriceCalculationInteractor priceCalculationInteractor;
 
     @BeforeEach
     void setUp() {
-        priceCalculationInteractor = new PriceCalculationInteractor(priceCalculationDsGateway);
+        priceCalculationInteractor = new PriceCalculationInteractor(priceCalculationDsGateway, pricePresenter);
     }
 
     @Test
@@ -57,24 +53,13 @@ public class PriceCalculationInteractorTest {
         final PriceRequestModel priceRequestModel = new PriceRequestModel(1L, 35455L, localDateTime);
         final List<PriceDsResponseModel> prices = List.of(createPrice(FIRST_PRICE_LIST,
                 firstStartDate, firstEndDate, 0L, FIRST_PRICE));
+        final PriceResponseModel expectedPriceResponseModel = createExpectedPriceResponseModel(FIRST_PRICE_LIST,
+                firstStartDate, firstEndDate, FIRST_PRICE);
         when(priceCalculationDsGateway.getPrices(any())).thenReturn(prices);
 
-        PriceResponseModel priceResponseModel = priceCalculationInteractor.getPrice(priceRequestModel);
+        priceCalculationInteractor.getPrice(priceRequestModel);
 
-        assertThat(priceResponseModel.getProductId()).isEqualTo(PRODUCT_ID);
-        assertThat(priceResponseModel.getBrandId()).isEqualTo(ZARA_BRAND_ID);
-        assertThat(priceResponseModel.getPriceList()).isEqualTo(FIRST_PRICE_LIST);
-        assertThat(priceResponseModel.getStartDate()).isEqualTo(firstStartDate);
-        assertThat(priceResponseModel.getEndDate()).isEqualTo(firstEndDate);
-        assertThat(priceResponseModel.getPrice()).isEqualTo(FIRST_PRICE);
-        assertThat(priceResponseModel.getCurrency()).isEqualTo(EURO_CURRENCY);
-    }
-
-    private PriceDsResponseModel createPrice(Long priceList, LocalDateTime expectedStartDateForApplicablePrice,
-                                             LocalDateTime expectedEndDateForApplicablePrice, Long priority,
-                                             double expectedPrice) {
-        return new PriceDsResponseModel(PRODUCT_ID, ZARA_BRAND_ID, priceList,
-                expectedStartDateForApplicablePrice, expectedEndDateForApplicablePrice, priority, expectedPrice, "EUR");
+        verify(pricePresenter, times(1)).prepareSuccessView(expectedPriceResponseModel);
     }
 
     @Test
@@ -84,17 +69,12 @@ public class PriceCalculationInteractorTest {
         final List<PriceDsResponseModel> prices = List.of(
                 createPrice(FIRST_PRICE_LIST, firstStartDate, firstEndDate, 0L, FIRST_PRICE),
                 createPrice(SECOND_PRICE_LIST, secondStartDate, secondEndDate, 1L, SECOND_PRICE));
+        final PriceResponseModel expectedPriceResponseModel = createExpectedPriceResponseModel(SECOND_PRICE_LIST,
+                secondStartDate, secondEndDate, SECOND_PRICE);
         when(priceCalculationDsGateway.getPrices(any())).thenReturn(prices);
 
-        PriceResponseModel priceResponseModel = priceCalculationInteractor.getPrice(priceRequestModel);
-
-        assertThat(priceResponseModel.getProductId()).isEqualTo(PRODUCT_ID);
-        assertThat(priceResponseModel.getBrandId()).isEqualTo(ZARA_BRAND_ID);
-        assertThat(priceResponseModel.getPriceList()).isEqualTo(SECOND_PRICE_LIST);
-        assertThat(priceResponseModel.getStartDate()).isEqualTo(secondStartDate);
-        assertThat(priceResponseModel.getEndDate()).isEqualTo(secondEndDate);
-        assertThat(priceResponseModel.getPrice()).isEqualTo(SECOND_PRICE);
-        assertThat(priceResponseModel.getCurrency()).isEqualTo(EURO_CURRENCY);
+        priceCalculationInteractor.getPrice(priceRequestModel);
+        verify(pricePresenter, times(1)).prepareSuccessView(expectedPriceResponseModel);
     }
 
     @Test
@@ -104,7 +84,21 @@ public class PriceCalculationInteractorTest {
 
         when(priceCalculationDsGateway.getPrices(any())).thenReturn(new ArrayList<>());
 
-        assertThatThrownBy(() -> priceCalculationInteractor.getPrice(priceRequestModel))
-                .isInstanceOf(ResponseStatusException.class);
+        priceCalculationInteractor.getPrice(priceRequestModel);
+        verify(pricePresenter, times(1))
+                .prepareFailView("There's no price for the product and date specified");
+    }
+
+    private PriceDsResponseModel createPrice(Long priceList, LocalDateTime startDateForApplicablePrice,
+                                             LocalDateTime endDateForApplicablePrice, Long priority,
+                                             double expectedPrice) {
+        return new PriceDsResponseModel(PRODUCT_ID, ZARA_BRAND_ID, priceList,
+                startDateForApplicablePrice, endDateForApplicablePrice, priority, expectedPrice, "EUR");
+    }
+
+    private PriceResponseModel createExpectedPriceResponseModel(Long priceList, LocalDateTime startDateForPrice,
+                                                                LocalDateTime endDateForPrice, double expectedPrice) {
+        return new PriceResponseModel(PRODUCT_ID, ZARA_BRAND_ID, priceList, startDateForPrice, endDateForPrice,
+                expectedPrice, Currency.getInstance("EUR"));
     }
 }

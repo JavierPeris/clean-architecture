@@ -1,8 +1,5 @@
 package org.javierperis.pricing;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.Comparator;
 import java.util.Currency;
 import java.util.List;
@@ -11,9 +8,11 @@ import java.util.Optional;
 public class PriceCalculationInteractor {
 
     final PriceCalculationDsGateway priceCalculationDsGateway;
+    final PricePresenter pricePresenter;
 
-    public PriceCalculationInteractor(PriceCalculationDsGateway priceCalculationDsGateway) {
+    public PriceCalculationInteractor(PriceCalculationDsGateway priceCalculationDsGateway, PricePresenter pricePresenter) {
         this.priceCalculationDsGateway = priceCalculationDsGateway;
+        this.pricePresenter = pricePresenter;
     }
 
     public PriceResponseModel getPrice(PriceRequestModel priceRequestModel) {
@@ -25,10 +24,11 @@ public class PriceCalculationInteractor {
                 .max(Comparator.naturalOrder());
         if (optionalPrice.isPresent()) {
             final PriceDsResponseModel price = optionalPrice.get();
-            return new PriceResponseModel(price.getProductId(), price.getBrandId(), price.getPriceList(),
-                    price.getStartDate(), price.getEndDate(), price.getPrice(),
-                    Currency.getInstance(price.getCurrency()));
+            final PriceResponseModel priceResponseModel = new PriceResponseModel(price.getProductId(),
+                    price.getBrandId(), price.getPriceList(), price.getStartDate(), price.getEndDate(),
+                    price.getPrice(), Currency.getInstance(price.getCurrency()));
+            return pricePresenter.prepareSuccessView(priceResponseModel);
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        return pricePresenter.prepareFailView("There's no price for the product and date specified");
     }
 }
