@@ -2,7 +2,7 @@ package org.javierperis.pricing;
 
 import java.util.List;
 
-interface PriceCalculationDsGateway {
+interface PricingDsGateway {
 
     List<PriceDsResponseModel> getPrices(PriceDsRequestModel priceDsRequestModel);
 }

@@ -1,6 +1,7 @@
 package org.javierperis.pricing;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -40,6 +41,7 @@ public class PriceDataMapper {
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Getter
 class PriceId implements Serializable  {
 
@@ -62,19 +64,4 @@ class PriceId implements Serializable  {
     @NotNull
     @Column(name = "priority", nullable = false)
     private Integer priority;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PriceId priceId = (PriceId) o;
-        return brandId.equals(priceId.brandId) && startDate.equals(priceId.startDate)
-                && endDate.equals(priceId.endDate) && productId.equals(priceId.productId)
-                && priority.equals(priceId.priority);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(brandId, startDate, endDate, productId, priority);
-    }
 }

@@ -17,7 +17,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PriceCalculationInteractorTest {
+public class PricingInteractorTest {
 
     private static final Integer ZARA_BRAND_ID = 1;
     private static final Long PRODUCT_ID = 35455L;
@@ -35,16 +35,16 @@ public class PriceCalculationInteractorTest {
     private static final Double SECOND_PRICE = 25.45D;
 
     @Mock
-    private PriceCalculationDsGateway priceCalculationDsGateway;
+    private PricingDsGateway pricingDsGateway;
     @Mock
     private PricePresenter pricePresenter;
 
     @InjectMocks
-    PriceCalculationInteractor priceCalculationInteractor;
+    PricingInteractor pricingInteractor;
 
     @BeforeEach
     void setUp() {
-        priceCalculationInteractor = new PriceCalculationInteractor(priceCalculationDsGateway, pricePresenter);
+        pricingInteractor = new PricingInteractor(pricingDsGateway, pricePresenter);
     }
 
     @Test
@@ -55,9 +55,9 @@ public class PriceCalculationInteractorTest {
                 firstStartDate, firstEndDate, 0, FIRST_PRICE));
         final PriceResponseModel expectedPriceResponseModel = createPriceResponseModel(FIRST_PRICE_LIST,
                 firstStartDate, firstEndDate, FIRST_PRICE);
-        when(priceCalculationDsGateway.getPrices(any())).thenReturn(prices);
+        when(pricingDsGateway.getPrices(any())).thenReturn(prices);
 
-        priceCalculationInteractor.getPrice(priceRequestModel);
+        pricingInteractor.getPrice(priceRequestModel);
 
         verify(pricePresenter, times(1)).prepareSuccessView(expectedPriceResponseModel);
     }
@@ -71,9 +71,9 @@ public class PriceCalculationInteractorTest {
                 createPriceDsResponse(SECOND_PRICE_LIST, secondStartDate, secondEndDate, 1, SECOND_PRICE));
         final PriceResponseModel expectedPriceResponseModel = createPriceResponseModel(SECOND_PRICE_LIST,
                 secondStartDate, secondEndDate, SECOND_PRICE);
-        when(priceCalculationDsGateway.getPrices(any())).thenReturn(prices);
+        when(pricingDsGateway.getPrices(any())).thenReturn(prices);
 
-        priceCalculationInteractor.getPrice(priceRequestModel);
+        pricingInteractor.getPrice(priceRequestModel);
         verify(pricePresenter, times(1)).prepareSuccessView(expectedPriceResponseModel);
     }
 
@@ -82,9 +82,9 @@ public class PriceCalculationInteractorTest {
         final LocalDateTime localDateTime = LocalDate.of(2020, 6, 14).atTime(16, 0);
         final PriceRequestModel priceRequestModel = new PriceRequestModel(1, 35455L, localDateTime);
 
-        when(priceCalculationDsGateway.getPrices(any())).thenReturn(new ArrayList<>());
+        when(pricingDsGateway.getPrices(any())).thenReturn(new ArrayList<>());
 
-        priceCalculationInteractor.getPrice(priceRequestModel);
+        pricingInteractor.getPrice(priceRequestModel);
         verify(pricePresenter, times(1))
                 .prepareFailView("There's no price for the product and date specified");
     }

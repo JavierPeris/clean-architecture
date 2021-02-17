@@ -5,20 +5,20 @@ import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
 
-public class PriceCalculationInteractor {
+public class PricingInteractor implements PriceInputBoundary {
 
-    final PriceCalculationDsGateway priceCalculationDsGateway;
+    final PricingDsGateway pricingDsGateway;
     final PricePresenter pricePresenter;
 
-    public PriceCalculationInteractor(PriceCalculationDsGateway priceCalculationDsGateway, PricePresenter pricePresenter) {
-        this.priceCalculationDsGateway = priceCalculationDsGateway;
+    public PricingInteractor(PricingDsGateway pricingDsGateway, PricePresenter pricePresenter) {
+        this.pricingDsGateway = pricingDsGateway;
         this.pricePresenter = pricePresenter;
     }
 
     public PriceResponseModel getPrice(PriceRequestModel priceRequestModel) {
         PriceDsRequestModel priceDsRequestModel = new PriceDsRequestModel(priceRequestModel.getBrandId(),
                 priceRequestModel.getProductId(), priceRequestModel.getDate());
-        List<PriceDsResponseModel> priceDsResponseModel = priceCalculationDsGateway.getPrices(priceDsRequestModel);
+        List<PriceDsResponseModel> priceDsResponseModel = pricingDsGateway.getPrices(priceDsRequestModel);
 
         final Optional<PriceDsResponseModel> optionalPrice = priceDsResponseModel.stream()
                 .max(Comparator.naturalOrder());

@@ -3,7 +3,7 @@ package org.javierperis.pricing;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JpaPrice implements PriceCalculationDsGateway {
+public class JpaPrice implements PricingDsGateway {
 
     final JpaPriceRepository repository;
 
