@@ -13,7 +13,12 @@ public class JpaPrice implements PriceCalculationDsGateway {
 
     @Override
     public List<PriceDsResponseModel> getPrices(PriceDsRequestModel priceDsRequestModel) {
-        return convertToPriceDsResponseModel(repository.findByPriceId_BrandId(priceDsRequestModel.getBrandId()));
+        return convertToPriceDsResponseModel(
+                repository.findByPriceId_BrandIdAndPriceId_ProductId(
+                        priceDsRequestModel.getBrandId(),
+                        priceDsRequestModel.getProductId()
+                )
+        );
     }
 
     private List<PriceDsResponseModel> convertToPriceDsResponseModel(List<PriceDataMapper> prices) {

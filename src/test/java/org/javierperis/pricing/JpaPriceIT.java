@@ -1,5 +1,6 @@
 package org.javierperis.pricing;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,25 +9,76 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
 @Transactional
 public class JpaPriceIT {
 
     private static final Integer ZARA_BRAND_ID = 1;
     private static final Long PRODUCT_ID = 35455L;
-    private static final LocalDateTime date = LocalDate.of(2020, 6, 14)
+    private static final LocalDateTime date = LocalDate.of(2022, 6, 14)
             .atTime(0, 0);
+    private static final int SETUP_INSERTED_ROWS = 4;
 
     @Autowired
     private JpaPriceRepository priceRepository;
     private JpaPrice jpaPrice;
 
-    @Test
-    public void givenNoPrices_whenRequest_ThenReturnEmptyList() {
+    @BeforeEach
+    public void setup() {
         jpaPrice = new JpaPrice(priceRepository);
-        PriceDsRequestModel priceDsRequestModel = new PriceDsRequestModel(ZARA_BRAND_ID, PRODUCT_ID, date);
-        jpaPrice.getPrices(priceDsRequestModel);
+        priceRepository.deleteAll();
+
+        LocalDateTime startDate = LocalDate.of(2020, 6, 14)
+                .atTime(0, 0, 0);
+        LocalDateTime endDate = LocalDate.of(2020, 12, 31)
+                .atTime(23, 59,59);
+        PriceId priceId = new PriceId(ZARA_BRAND_ID, startDate, endDate, PRODUCT_ID, 0);
+        PriceDataMapper priceDataMapper = new PriceDataMapper(priceId, 1, 35.50,
+                PriceDataMapper.Currency.EUR);
+        priceRepository.save(priceDataMapper);
+
+        LocalDateTime startDate2 = LocalDate.of(2020, 6, 14)
+                .atTime(15, 0, 0);
+        LocalDateTime endDate2 = LocalDate.of(2020, 6, 14)
+                .atTime(18, 30,0);
+        PriceId priceId2 = new PriceId(ZARA_BRAND_ID, startDate2, endDate2, PRODUCT_ID, 0);
+        PriceDataMapper priceDataMapper2 = new PriceDataMapper(priceId2, 2, 25.45,
+                PriceDataMapper.Currency.EUR);
+        priceRepository.save(priceDataMapper2);
+
+        LocalDateTime startDate3 = LocalDate.of(2020, 6, 15)
+                .atTime(0, 0, 0);
+        LocalDateTime endDate3 = LocalDate.of(2020, 6, 15)
+                .atTime(11, 0,0);
+        PriceId priceId3 = new PriceId(ZARA_BRAND_ID, startDate3, endDate3, PRODUCT_ID, 0);
+        PriceDataMapper priceDataMapper3 = new PriceDataMapper(priceId3, 3, 30.50,
+                PriceDataMapper.Currency.EUR);
+        priceRepository.save(priceDataMapper3);
+
+        LocalDateTime startDate4 = LocalDate.of(2020, 6, 15)
+                .atTime(16, 0, 0);
+        LocalDateTime endDate4 = LocalDate.of(2020, 12, 31)
+                .atTime(23, 59,59);
+        PriceId priceId4 = new PriceId(ZARA_BRAND_ID, startDate4, endDate4, PRODUCT_ID, 0);
+        PriceDataMapper priceDataMapper4 = new PriceDataMapper(priceId4, 4, 38.95,
+                PriceDataMapper.Currency.EUR);
+        priceRepository.save(priceDataMapper4);
     }
 
+    @Test
+    public void givenNoPrices_whenRequest_ThenReturnEmptyList() {
+        priceRepository.deleteAll();
+        PriceDsRequestModel priceDsRequestModel = new PriceDsRequestModel(ZARA_BRAND_ID, PRODUCT_ID, date);
+        assertThat(jpaPrice.getPrices(priceDsRequestModel)).isEmpty();
+    }
+
+    @Test
+    public void givenSetupPrices_whenRequest_ThenReturnList() {
+        PriceDsRequestModel priceDsRequestModel = new PriceDsRequestModel(ZARA_BRAND_ID, PRODUCT_ID, date);
+        assertThat(jpaPrice.getPrices(priceDsRequestModel)).isNotEmpty();
+        assertThat(jpaPrice.getPrices(priceDsRequestModel)).hasSize(SETUP_INSERTED_ROWS);
+    }
 
 }

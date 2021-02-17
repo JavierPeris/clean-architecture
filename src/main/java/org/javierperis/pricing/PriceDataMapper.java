@@ -1,6 +1,8 @@
 package org.javierperis.pricing;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
@@ -10,6 +12,8 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Table(name = "prices")
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Getter
 public class PriceDataMapper {
@@ -34,6 +38,8 @@ public class PriceDataMapper {
 }
 
 @Embeddable
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 class PriceId implements Serializable  {
 

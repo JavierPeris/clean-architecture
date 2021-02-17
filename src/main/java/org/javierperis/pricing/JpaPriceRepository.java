@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 public interface JpaPriceRepository extends JpaRepository<PriceDataMapper, PriceId> {
 
-    List<PriceDataMapper> findByPriceId_BrandId(Integer brandId);
+    List<PriceDataMapper> findByPriceId_BrandIdAndPriceId_ProductId(Integer brandId, Long productId);
 }
