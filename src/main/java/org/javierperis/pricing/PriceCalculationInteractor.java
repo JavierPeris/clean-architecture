@@ -1,5 +1,8 @@
 package org.javierperis.pricing;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.Comparator;
 import java.util.Currency;
 import java.util.List;
@@ -19,13 +22,13 @@ public class PriceCalculationInteractor {
         List<PriceDsResponseModel> priceDsResponseModel = priceCalculationDsGateway.getPrices(priceDsRequestModel);
 
         final Optional<PriceDsResponseModel> optionalPrice = priceDsResponseModel.stream()
-                .sorted(Comparator.reverseOrder()).findFirst();
+                .max(Comparator.naturalOrder());
         if (optionalPrice.isPresent()) {
             final PriceDsResponseModel price = optionalPrice.get();
             return new PriceResponseModel(price.getProductId(), price.getBrandId(), price.getPriceList(),
                     price.getStartDate(), price.getEndDate(), price.getPrice(),
                     Currency.getInstance(price.getCurrency()));
         }
-        return null;
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 }

@@ -6,13 +6,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -94,4 +97,14 @@ public class PriceCalculationInteractorTest {
         assertThat(priceResponseModel.getCurrency()).isEqualTo(EURO_CURRENCY);
     }
 
+    @Test
+    public void givenNoPriceInRage_whenRequest_ThenReturnError() {
+        final LocalDateTime localDateTime = LocalDate.of(2020, 6, 14).atTime(16, 0);
+        final PriceRequestModel priceRequestModel = new PriceRequestModel(1L, 35455L, localDateTime);
+
+        when(priceCalculationDsGateway.getPrices(any())).thenReturn(new ArrayList<>());
+
+        assertThatThrownBy(() -> priceCalculationInteractor.getPrice(priceRequestModel))
+                .isInstanceOf(ResponseStatusException.class);
+    }
 }
