@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 public class PriceDsResponseModel implements Comparable<PriceDsResponseModel> {
 
     Long productId;
-    Long brandId;
-    Long priceList;
+    Integer brandId;
+    Integer priceList;
     LocalDateTime startDate;
     LocalDateTime endDate;
-    Long priority;
+    Integer priority;
     Double price;
     String currency;
 

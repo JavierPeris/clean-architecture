@@ -1,13 +1,17 @@
 package org.javierperis.pricing;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Table(name = "prices")
 @Entity
+@Getter
 public class PriceDataMapper {
 
     enum Currency {
@@ -30,6 +34,7 @@ public class PriceDataMapper {
 }
 
 @Embeddable
+@Getter
 class PriceId implements Serializable  {
 
     @NotNull
@@ -38,17 +43,32 @@ class PriceId implements Serializable  {
 
     @NotNull
     @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @NotNull
     @Column(name = "end_date", nullable = false)
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     @NotNull
     @Column(name = "product_id", nullable = false)
-    private Integer productId;
+    private Long productId;
 
     @NotNull
     @Column(name = "priority", nullable = false)
     private Integer priority;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PriceId priceId = (PriceId) o;
+        return brandId.equals(priceId.brandId) && startDate.equals(priceId.startDate)
+                && endDate.equals(priceId.endDate) && productId.equals(priceId.productId)
+                && priority.equals(priceId.priority);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(brandId, startDate, endDate, productId, priority);
+    }
 }

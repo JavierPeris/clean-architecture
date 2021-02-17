@@ -9,8 +9,8 @@ import java.util.Currency;
 public class PriceResponseModel {
 
     Long productId;
-    Long brandId;
-    Long priceList;
+    Integer brandId;
+    Integer priceList;
     LocalDateTime startDate;
     LocalDateTime endDate;
     Double price;

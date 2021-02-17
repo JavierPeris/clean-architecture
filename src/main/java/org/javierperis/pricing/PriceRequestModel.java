@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Value
 public class PriceRequestModel {
 
-    Long brandId;
+    Integer brandId;
     Long productId;
     LocalDateTime date;
 
