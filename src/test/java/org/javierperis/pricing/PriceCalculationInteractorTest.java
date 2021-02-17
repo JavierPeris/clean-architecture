@@ -51,9 +51,9 @@ public class PriceCalculationInteractorTest {
     public void givenJustOnePriceInRange_whenRequest_ThenReturnThatPrice() {
         final LocalDateTime localDateTime = LocalDate.of(2020, 6, 16).atTime(21, 0);
         final PriceRequestModel priceRequestModel = new PriceRequestModel(1L, 35455L, localDateTime);
-        final List<PriceDsResponseModel> prices = List.of(createPrice(FIRST_PRICE_LIST,
+        final List<PriceDsResponseModel> prices = List.of(createPriceDsResponse(FIRST_PRICE_LIST,
                 firstStartDate, firstEndDate, 0L, FIRST_PRICE));
-        final PriceResponseModel expectedPriceResponseModel = createExpectedPriceResponseModel(FIRST_PRICE_LIST,
+        final PriceResponseModel expectedPriceResponseModel = createPriceResponseModel(FIRST_PRICE_LIST,
                 firstStartDate, firstEndDate, FIRST_PRICE);
         when(priceCalculationDsGateway.getPrices(any())).thenReturn(prices);
 
@@ -67,9 +67,9 @@ public class PriceCalculationInteractorTest {
         final LocalDateTime localDateTime = LocalDate.of(2020, 6, 14).atTime(16, 0);
         final PriceRequestModel priceRequestModel = new PriceRequestModel(1L, 35455L, localDateTime);
         final List<PriceDsResponseModel> prices = List.of(
-                createPrice(FIRST_PRICE_LIST, firstStartDate, firstEndDate, 0L, FIRST_PRICE),
-                createPrice(SECOND_PRICE_LIST, secondStartDate, secondEndDate, 1L, SECOND_PRICE));
-        final PriceResponseModel expectedPriceResponseModel = createExpectedPriceResponseModel(SECOND_PRICE_LIST,
+                createPriceDsResponse(FIRST_PRICE_LIST, firstStartDate, firstEndDate, 0L, FIRST_PRICE),
+                createPriceDsResponse(SECOND_PRICE_LIST, secondStartDate, secondEndDate, 1L, SECOND_PRICE));
+        final PriceResponseModel expectedPriceResponseModel = createPriceResponseModel(SECOND_PRICE_LIST,
                 secondStartDate, secondEndDate, SECOND_PRICE);
         when(priceCalculationDsGateway.getPrices(any())).thenReturn(prices);
 
@@ -89,15 +89,15 @@ public class PriceCalculationInteractorTest {
                 .prepareFailView("There's no price for the product and date specified");
     }
 
-    private PriceDsResponseModel createPrice(Long priceList, LocalDateTime startDateForApplicablePrice,
-                                             LocalDateTime endDateForApplicablePrice, Long priority,
-                                             double expectedPrice) {
+    private PriceDsResponseModel createPriceDsResponse(Long priceList, LocalDateTime startDateForApplicablePrice,
+                                                       LocalDateTime endDateForApplicablePrice, Long priority,
+                                                       double expectedPrice) {
         return new PriceDsResponseModel(PRODUCT_ID, ZARA_BRAND_ID, priceList,
                 startDateForApplicablePrice, endDateForApplicablePrice, priority, expectedPrice, "EUR");
     }
 
-    private PriceResponseModel createExpectedPriceResponseModel(Long priceList, LocalDateTime startDateForPrice,
-                                                                LocalDateTime endDateForPrice, double expectedPrice) {
+    private PriceResponseModel createPriceResponseModel(Long priceList, LocalDateTime startDateForPrice,
+                                                        LocalDateTime endDateForPrice, double expectedPrice) {
         return new PriceResponseModel(PRODUCT_ID, ZARA_BRAND_ID, priceList, startDateForPrice, endDateForPrice,
                 expectedPrice, Currency.getInstance("EUR"));
     }
