@@ -17,9 +17,14 @@ public class JpaPriceIT {
 
     private static final Integer ZARA_BRAND_ID = 1;
     private static final Long PRODUCT_ID = 35455L;
-    private static final LocalDateTime date = LocalDate.of(2022, 6, 14)
+    private static final LocalDateTime dateNotInDatabase = LocalDate.of(2022, 6, 14)
+            .atTime(0, 0,30);
+    private static final LocalDateTime dateInDatabase = LocalDate.of(2020, 6, 19)
             .atTime(0, 0);
-    private static final int SETUP_INSERTED_ROWS = 4;
+    private static final LocalDateTime veryFirstDateInDatabase = LocalDate.of(2020, 6, 14)
+            .atTime(15, 0,0);
+    private static final LocalDateTime lastMomentDateInDatabase = LocalDate.of(2020, 6, 14)
+            .atTime(18, 30,0);
 
     @Autowired
     private JpaPriceRepository priceRepository;
@@ -43,7 +48,7 @@ public class JpaPriceIT {
                 .atTime(15, 0, 0);
         LocalDateTime endDate2 = LocalDate.of(2020, 6, 14)
                 .atTime(18, 30,0);
-        PriceId priceId2 = new PriceId(ZARA_BRAND_ID, startDate2, endDate2, PRODUCT_ID, 0);
+        PriceId priceId2 = new PriceId(ZARA_BRAND_ID, startDate2, endDate2, PRODUCT_ID, 1);
         PriceDataMapper priceDataMapper2 = new PriceDataMapper(priceId2, 2, 25.45,
                 PriceDataMapper.Currency.EUR);
         priceRepository.save(priceDataMapper2);
@@ -52,7 +57,7 @@ public class JpaPriceIT {
                 .atTime(0, 0, 0);
         LocalDateTime endDate3 = LocalDate.of(2020, 6, 15)
                 .atTime(11, 0,0);
-        PriceId priceId3 = new PriceId(ZARA_BRAND_ID, startDate3, endDate3, PRODUCT_ID, 0);
+        PriceId priceId3 = new PriceId(ZARA_BRAND_ID, startDate3, endDate3, PRODUCT_ID, 1);
         PriceDataMapper priceDataMapper3 = new PriceDataMapper(priceId3, 3, 30.50,
                 PriceDataMapper.Currency.EUR);
         priceRepository.save(priceDataMapper3);
@@ -61,7 +66,7 @@ public class JpaPriceIT {
                 .atTime(16, 0, 0);
         LocalDateTime endDate4 = LocalDate.of(2020, 12, 31)
                 .atTime(23, 59,59);
-        PriceId priceId4 = new PriceId(ZARA_BRAND_ID, startDate4, endDate4, PRODUCT_ID, 0);
+        PriceId priceId4 = new PriceId(ZARA_BRAND_ID, startDate4, endDate4, PRODUCT_ID, 1);
         PriceDataMapper priceDataMapper4 = new PriceDataMapper(priceId4, 4, 38.95,
                 PriceDataMapper.Currency.EUR);
         priceRepository.save(priceDataMapper4);
@@ -70,15 +75,36 @@ public class JpaPriceIT {
     @Test
     public void givenNoPrices_whenRequest_ThenReturnEmptyList() {
         priceRepository.deleteAll();
-        PriceDsRequestModel priceDsRequestModel = new PriceDsRequestModel(ZARA_BRAND_ID, PRODUCT_ID, date);
+        PriceDsRequestModel priceDsRequestModel = new PriceDsRequestModel(ZARA_BRAND_ID, PRODUCT_ID, dateNotInDatabase);
+        assertThat(jpaPrice.getPrices(priceDsRequestModel)).isEmpty();
+    }
+
+    @Test
+    public void givenSetupPrices_whenRequestWithDateNotInRage_ThenReturnEmptyList() {
+        PriceDsRequestModel priceDsRequestModel = new PriceDsRequestModel(ZARA_BRAND_ID, PRODUCT_ID, dateNotInDatabase);
         assertThat(jpaPrice.getPrices(priceDsRequestModel)).isEmpty();
     }
 
     @Test
     public void givenSetupPrices_whenRequest_ThenReturnList() {
-        PriceDsRequestModel priceDsRequestModel = new PriceDsRequestModel(ZARA_BRAND_ID, PRODUCT_ID, date);
+        PriceDsRequestModel priceDsRequestModel = new PriceDsRequestModel(ZARA_BRAND_ID, PRODUCT_ID, dateInDatabase);
         assertThat(jpaPrice.getPrices(priceDsRequestModel)).isNotEmpty();
-        assertThat(jpaPrice.getPrices(priceDsRequestModel)).hasSize(SETUP_INSERTED_ROWS);
+        assertThat(jpaPrice.getPrices(priceDsRequestModel)).hasSize(2);
     }
+
+    @Test
+    public void givenSetupPrices_whenRequestSameMomentEndPrice_ThenReturnThatPrice() {
+        PriceDsRequestModel priceDsRequestModel = new PriceDsRequestModel(ZARA_BRAND_ID, PRODUCT_ID, veryFirstDateInDatabase);
+        assertThat(jpaPrice.getPrices(priceDsRequestModel)).isNotEmpty();
+        assertThat(jpaPrice.getPrices(priceDsRequestModel)).hasSize(2);
+    }
+
+    @Test
+    public void givenSetupPrices_whenRequestSameMomentStartPrice_ThenReturnThatPrice() {
+        PriceDsRequestModel priceDsRequestModel = new PriceDsRequestModel(ZARA_BRAND_ID, PRODUCT_ID, lastMomentDateInDatabase);
+        assertThat(jpaPrice.getPrices(priceDsRequestModel)).isNotEmpty();
+        assertThat(jpaPrice.getPrices(priceDsRequestModel)).hasSize(2);
+    }
+
 
 }
