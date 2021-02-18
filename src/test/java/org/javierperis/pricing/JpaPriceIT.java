@@ -3,7 +3,7 @@ package org.javierperis.pricing;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@DataJpaTest
 @Transactional
 public class JpaPriceIT {
 
@@ -41,7 +41,7 @@ public class JpaPriceIT {
                 .atTime(23, 59,59);
         PriceId priceId = new PriceId(ZARA_BRAND_ID, startDate, endDate, PRODUCT_ID, 0);
         PriceDataMapper priceDataMapper = new PriceDataMapper(priceId, 1, 35.50,
-                PriceDataMapper.Currency.EUR);
+                CurrencyModel.EUR);
         priceRepository.save(priceDataMapper);
 
         LocalDateTime startDate2 = LocalDate.of(2020, 6, 14)
@@ -50,7 +50,7 @@ public class JpaPriceIT {
                 .atTime(18, 30,0);
         PriceId priceId2 = new PriceId(ZARA_BRAND_ID, startDate2, endDate2, PRODUCT_ID, 1);
         PriceDataMapper priceDataMapper2 = new PriceDataMapper(priceId2, 2, 25.45,
-                PriceDataMapper.Currency.EUR);
+                CurrencyModel.EUR);
         priceRepository.save(priceDataMapper2);
 
         LocalDateTime startDate3 = LocalDate.of(2020, 6, 15)
@@ -59,7 +59,7 @@ public class JpaPriceIT {
                 .atTime(11, 0,0);
         PriceId priceId3 = new PriceId(ZARA_BRAND_ID, startDate3, endDate3, PRODUCT_ID, 1);
         PriceDataMapper priceDataMapper3 = new PriceDataMapper(priceId3, 3, 30.50,
-                PriceDataMapper.Currency.EUR);
+                CurrencyModel.EUR);
         priceRepository.save(priceDataMapper3);
 
         LocalDateTime startDate4 = LocalDate.of(2020, 6, 15)
@@ -68,7 +68,7 @@ public class JpaPriceIT {
                 .atTime(23, 59,59);
         PriceId priceId4 = new PriceId(ZARA_BRAND_ID, startDate4, endDate4, PRODUCT_ID, 1);
         PriceDataMapper priceDataMapper4 = new PriceDataMapper(priceId4, 4, 38.95,
-                PriceDataMapper.Currency.EUR);
+                CurrencyModel.EUR);
         priceRepository.save(priceDataMapper4);
     }
 
