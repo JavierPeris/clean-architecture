@@ -10,7 +10,6 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Table(name = "prices")
 @NoArgsConstructor
@@ -18,10 +17,6 @@ import java.util.Objects;
 @Entity
 @Getter
 public class PriceDataMapper {
-
-    enum Currency {
-        EUR, USD, GBP
-    }
 
     @EmbeddedId PriceId priceId;
     @NotNull
@@ -34,7 +29,7 @@ public class PriceDataMapper {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "curr", nullable = false)
-    private Currency currency;
+    private CurrencyModel currencyModel;
 
 }
 

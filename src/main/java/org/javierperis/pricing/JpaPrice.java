@@ -31,7 +31,7 @@ public class JpaPrice implements PricingDsGateway {
             priceDsResponseModel.add(
                     new PriceDsResponseModel(priceId.getProductId(), priceId.getBrandId(), price.getPriceList(),
                             priceId.getStartDate(), priceId.getEndDate(), priceId.getPriority(), price.getPrice(),
-                            price.getCurrency().name())
+                            price.getCurrencyModel().name())
             );
         }
         return priceDsResponseModel;
