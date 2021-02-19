@@ -3,7 +3,8 @@ package org.javierperis.pricing;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -11,7 +12,8 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
+@SpringBootTest
+@AutoConfigureMockMvc
 @Transactional
 public class JpaPriceIT {
 
@@ -93,14 +95,14 @@ public class JpaPriceIT {
     }
 
     @Test
-    public void givenSetupPrices_whenRequestSameMomentEndPrice_ThenReturnThatPrice() {
+    public void givenSetupPrices_whenRequestSameMomentEndPrice_ThenIncludeThatPrice() {
         PriceDsRequestModel priceDsRequestModel = new PriceDsRequestModel(ZARA_BRAND_ID, PRODUCT_ID, veryFirstDateInDatabase);
         assertThat(jpaPrice.getPrices(priceDsRequestModel)).isNotEmpty();
         assertThat(jpaPrice.getPrices(priceDsRequestModel)).hasSize(2);
     }
 
     @Test
-    public void givenSetupPrices_whenRequestSameMomentStartPrice_ThenReturnThatPrice() {
+    public void givenSetupPrices_whenRequestSameMomentStartPrice_ThenIncludeThatPrice() {
         PriceDsRequestModel priceDsRequestModel = new PriceDsRequestModel(ZARA_BRAND_ID, PRODUCT_ID, lastMomentDateInDatabase);
         assertThat(jpaPrice.getPrices(priceDsRequestModel)).isNotEmpty();
         assertThat(jpaPrice.getPrices(priceDsRequestModel)).hasSize(2);
