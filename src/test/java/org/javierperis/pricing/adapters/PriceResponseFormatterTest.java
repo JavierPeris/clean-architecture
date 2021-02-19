@@ -1,4 +1,4 @@
-package org.javierperis.pricing;
+package org.javierperis.pricing.adapters;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;

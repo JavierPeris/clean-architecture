@@ -1,4 +1,4 @@
-package org.javierperis.pricing;
+package org.javierperis.pricing.adapters;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

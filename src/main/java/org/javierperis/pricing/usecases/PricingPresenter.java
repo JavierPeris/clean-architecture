@@ -1,6 +1,6 @@
-package org.javierperis.pricing;
+package org.javierperis.pricing.usecases;
 
-public interface PricePresenter {
+public interface PricingPresenter {
 
     PriceResponseModel prepareSuccessView(PriceResponseModel priceResponseModel);
 

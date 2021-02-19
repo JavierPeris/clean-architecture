@@ -1,4 +1,4 @@
-package org.javierperis;
+package org.javierperis.pricing;
 
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;

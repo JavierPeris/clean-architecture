@@ -1,18 +1,18 @@
-package org.javierperis.pricing;
+package org.javierperis.pricing.usecases;
 
 import java.util.Comparator;
 import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
 
-public class PricingInteractor implements PriceInputBoundary {
+public class PricingInteractor implements PricingInputBoundary {
 
     final PricingDsGateway pricingDsGateway;
-    final PricePresenter pricePresenter;
+    final PricingPresenter pricingPresenter;
 
-    public PricingInteractor(PricingDsGateway pricingDsGateway, PricePresenter pricePresenter) {
+    public PricingInteractor(PricingDsGateway pricingDsGateway, PricingPresenter pricingPresenter) {
         this.pricingDsGateway = pricingDsGateway;
-        this.pricePresenter = pricePresenter;
+        this.pricingPresenter = pricingPresenter;
     }
 
     public PriceResponseModel getPrice(PriceRequestModel priceRequestModel) {
@@ -27,8 +27,8 @@ public class PricingInteractor implements PriceInputBoundary {
             final PriceResponseModel priceResponseModel = new PriceResponseModel(price.getProductId(),
                     price.getBrandId(), price.getPriceList(), price.getStartDate(), price.getEndDate(),
                     price.getPrice(), Currency.getInstance(price.getCurrency()));
-            return pricePresenter.prepareSuccessView(priceResponseModel);
+            return pricingPresenter.prepareSuccessView(priceResponseModel);
         }
-        return pricePresenter.prepareFailView("There's no price for the product and date specified");
+        return pricingPresenter.prepareFailView("There's no price for the product and date specified");
     }
 }

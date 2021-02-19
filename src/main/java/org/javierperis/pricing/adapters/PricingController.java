@@ -1,5 +1,8 @@
-package org.javierperis.pricing;
+package org.javierperis.pricing.adapters;
 
+import org.javierperis.pricing.usecases.PriceRequestModel;
+import org.javierperis.pricing.usecases.PriceResponseModel;
+import org.javierperis.pricing.usecases.PricingInputBoundary;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,9 +15,9 @@ import java.time.LocalDateTime;
 @RequestMapping("/api")
 public class PricingController {
 
-    final PriceInputBoundary priceInput;
+    final PricingInputBoundary priceInput;
 
-    public PricingController(PriceInputBoundary priceInput) {
+    public PricingController(PricingInputBoundary priceInput) {
         this.priceInput = priceInput;
     }
 

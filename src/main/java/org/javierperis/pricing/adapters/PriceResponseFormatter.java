@@ -1,9 +1,11 @@
-package org.javierperis.pricing;
+package org.javierperis.pricing.adapters;
 
+import org.javierperis.pricing.usecases.PricingPresenter;
+import org.javierperis.pricing.usecases.PriceResponseModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-public class PriceResponseFormatter implements PricePresenter {
+public class PriceResponseFormatter implements PricingPresenter {
 
     @Override
     public PriceResponseModel prepareSuccessView(PriceResponseModel price) {

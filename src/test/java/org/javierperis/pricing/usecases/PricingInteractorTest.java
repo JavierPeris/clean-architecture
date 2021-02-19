@@ -1,4 +1,4 @@
-package org.javierperis.pricing;
+package org.javierperis.pricing.usecases;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,14 +37,14 @@ public class PricingInteractorTest {
     @Mock
     private PricingDsGateway pricingDsGateway;
     @Mock
-    private PricePresenter pricePresenter;
+    private PricingPresenter pricingPresenter;
 
     @InjectMocks
     PricingInteractor pricingInteractor;
 
     @BeforeEach
     void setUp() {
-        pricingInteractor = new PricingInteractor(pricingDsGateway, pricePresenter);
+        pricingInteractor = new PricingInteractor(pricingDsGateway, pricingPresenter);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class PricingInteractorTest {
 
         pricingInteractor.getPrice(priceRequestModel);
 
-        verify(pricePresenter, times(1)).prepareSuccessView(expectedPriceResponseModel);
+        verify(pricingPresenter, times(1)).prepareSuccessView(expectedPriceResponseModel);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class PricingInteractorTest {
         when(pricingDsGateway.getPrices(any())).thenReturn(prices);
 
         pricingInteractor.getPrice(priceRequestModel);
-        verify(pricePresenter, times(1)).prepareSuccessView(expectedPriceResponseModel);
+        verify(pricingPresenter, times(1)).prepareSuccessView(expectedPriceResponseModel);
     }
 
     @Test
@@ -85,7 +85,7 @@ public class PricingInteractorTest {
         when(pricingDsGateway.getPrices(any())).thenReturn(new ArrayList<>());
 
         pricingInteractor.getPrice(priceRequestModel);
-        verify(pricePresenter, times(1))
+        verify(pricingPresenter, times(1))
                 .prepareFailView("There's no price for the product and date specified");
     }
 

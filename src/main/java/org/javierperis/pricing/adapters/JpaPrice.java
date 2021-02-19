@@ -1,4 +1,8 @@
-package org.javierperis.pricing;
+package org.javierperis.pricing.adapters;
+
+import org.javierperis.pricing.usecases.PriceDsRequestModel;
+import org.javierperis.pricing.usecases.PriceDsResponseModel;
+import org.javierperis.pricing.usecases.PricingDsGateway;
 
 import java.util.ArrayList;
 import java.util.List;

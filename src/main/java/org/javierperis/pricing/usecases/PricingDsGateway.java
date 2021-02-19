@@ -1,8 +1,8 @@
-package org.javierperis.pricing;
+package org.javierperis.pricing.usecases;
 
 import java.util.List;
 
-interface PricingDsGateway {
+public interface PricingDsGateway {
 
     List<PriceDsResponseModel> getPrices(PriceDsRequestModel priceDsRequestModel);
 }
