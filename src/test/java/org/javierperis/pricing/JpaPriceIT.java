@@ -35,43 +35,6 @@ public class JpaPriceIT {
     @BeforeEach
     public void setup() {
         jpaPrice = new JpaPrice(priceRepository);
-        priceRepository.deleteAll();
-
-        LocalDateTime startDate = LocalDate.of(2020, 6, 14)
-                .atTime(0, 0, 0);
-        LocalDateTime endDate = LocalDate.of(2020, 12, 31)
-                .atTime(23, 59,59);
-        PriceId priceId = new PriceId(ZARA_BRAND_ID, startDate, endDate, PRODUCT_ID, 0);
-        PriceDataMapper priceDataMapper = new PriceDataMapper(priceId, 1, 35.50,
-                CurrencyModel.EUR);
-        priceRepository.save(priceDataMapper);
-
-        LocalDateTime startDate2 = LocalDate.of(2020, 6, 14)
-                .atTime(15, 0, 0);
-        LocalDateTime endDate2 = LocalDate.of(2020, 6, 14)
-                .atTime(18, 30,0);
-        PriceId priceId2 = new PriceId(ZARA_BRAND_ID, startDate2, endDate2, PRODUCT_ID, 1);
-        PriceDataMapper priceDataMapper2 = new PriceDataMapper(priceId2, 2, 25.45,
-                CurrencyModel.EUR);
-        priceRepository.save(priceDataMapper2);
-
-        LocalDateTime startDate3 = LocalDate.of(2020, 6, 15)
-                .atTime(0, 0, 0);
-        LocalDateTime endDate3 = LocalDate.of(2020, 6, 15)
-                .atTime(11, 0,0);
-        PriceId priceId3 = new PriceId(ZARA_BRAND_ID, startDate3, endDate3, PRODUCT_ID, 1);
-        PriceDataMapper priceDataMapper3 = new PriceDataMapper(priceId3, 3, 30.50,
-                CurrencyModel.EUR);
-        priceRepository.save(priceDataMapper3);
-
-        LocalDateTime startDate4 = LocalDate.of(2020, 6, 15)
-                .atTime(16, 0, 0);
-        LocalDateTime endDate4 = LocalDate.of(2020, 12, 31)
-                .atTime(23, 59,59);
-        PriceId priceId4 = new PriceId(ZARA_BRAND_ID, startDate4, endDate4, PRODUCT_ID, 1);
-        PriceDataMapper priceDataMapper4 = new PriceDataMapper(priceId4, 4, 38.95,
-                CurrencyModel.EUR);
-        priceRepository.save(priceDataMapper4);
     }
 
     @Test
