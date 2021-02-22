@@ -1,4 +1,4 @@
-package org.javierperis.pricing.usecases;
+package org.javierperis.pricing.usecases.models;
 
 import lombok.Value;
 

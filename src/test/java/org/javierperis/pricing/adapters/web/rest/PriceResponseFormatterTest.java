@@ -1,5 +1,6 @@
-package org.javierperis.pricing.adapters;
+package org.javierperis.pricing.adapters.web.rest;
 
+import org.javierperis.pricing.adapters.web.rest.PriceResponseFormatter;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
 

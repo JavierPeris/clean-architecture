@@ -1,5 +1,10 @@
 package org.javierperis.pricing.usecases;
 
+import org.javierperis.pricing.usecases.models.PriceDsRequestModel;
+import org.javierperis.pricing.usecases.models.PriceDsResponseModel;
+import org.javierperis.pricing.usecases.models.PriceRequestModel;
+import org.javierperis.pricing.usecases.models.PriceResponseModel;
+
 import java.util.Comparator;
 import java.util.Currency;
 import java.util.List;

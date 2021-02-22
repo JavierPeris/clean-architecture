@@ -1,6 +1,8 @@
-package org.javierperis.pricing.adapters;
+package org.javierperis.pricing.adapters.persistence;
 
-import org.javierperis.pricing.usecases.PriceDsRequestModel;
+import org.javierperis.pricing.adapters.persistence.JpaPrice;
+import org.javierperis.pricing.adapters.persistence.JpaPriceRepository;
+import org.javierperis.pricing.usecases.models.PriceDsRequestModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
-package org.javierperis.pricing.adapters;
+package org.javierperis.pricing.adapters.web.rest;
 
 import org.javierperis.pricing.usecases.PricingPresenter;
-import org.javierperis.pricing.usecases.PriceResponseModel;
+import org.javierperis.pricing.usecases.models.PriceResponseModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 

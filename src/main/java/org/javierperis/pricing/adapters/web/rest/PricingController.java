@@ -1,7 +1,7 @@
-package org.javierperis.pricing.adapters;
+package org.javierperis.pricing.adapters.web.rest;
 
-import org.javierperis.pricing.usecases.PriceRequestModel;
-import org.javierperis.pricing.usecases.PriceResponseModel;
+import org.javierperis.pricing.usecases.models.PriceRequestModel;
+import org.javierperis.pricing.usecases.models.PriceResponseModel;
 import org.javierperis.pricing.usecases.PricingInputBoundary;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;

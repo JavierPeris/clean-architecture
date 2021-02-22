@@ -1,7 +1,7 @@
-package org.javierperis.pricing.adapters;
+package org.javierperis.pricing.adapters.persistence;
 
-import org.javierperis.pricing.usecases.PriceDsRequestModel;
-import org.javierperis.pricing.usecases.PriceDsResponseModel;
+import org.javierperis.pricing.usecases.models.PriceDsRequestModel;
+import org.javierperis.pricing.usecases.models.PriceDsResponseModel;
 import org.javierperis.pricing.usecases.PricingDsGateway;
 
 import java.util.ArrayList;
