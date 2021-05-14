@@ -40,32 +40,32 @@ curl --location --request GET "http://localhost:8080/api/prices?brandId=1&produc
 
 Las respuestas tienen el siguiente formato: 
 
-{
-"productId": 35455,
-"brandId": 1,
-"priceList": 4,
-"startDate": "2020-06-15T16:00:00",
-"endDate": "2020-12-31T23:59:59",
-"price": 38.95,
-"currency": "EUR"
-}
+    {
+    "productId": 35455,
+    "brandId": 1,
+    "priceList": 4,
+    "startDate": "2020-06-15T16:00:00",
+    "endDate": "2020-12-31T23:59:59",
+    "price": 38.95,
+    "currency": "EUR"
+    }
 
 En el caso de pedir un producto que no se encuentra en la tabla de precios:
 
-{
-"timestamp": "2021-02-20T11:20:09.757+00:00",
-"status": 404,
-"error": "Not Found",
-"message": "",
-"path": "/api/prices"
-}
+    {
+    "timestamp": "2021-02-20T11:20:09.757+00:00",
+    "status": 404,
+    "error": "Not Found",
+    "message": "",
+    "path": "/api/prices"
+    }
 
 O si el formato no es el adecuado (por ejemplo pasando una fecha que no sigue el formato ISO):
 
-{
-"timestamp": "2021-02-20T11:20:31.089+00:00",
-"status": 400,
-"error": "Bad Request",
-"message": "",
-"path": "/api/prices"
-}
+    {
+    "timestamp": "2021-02-20T11:20:31.089+00:00",
+    "status": 400,
+    "error": "Bad Request",
+    "message": "",
+    "path": "/api/prices"
+    }
